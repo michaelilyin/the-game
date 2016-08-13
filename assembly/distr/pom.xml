@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>assembly</artifactId>
+        <groupId>the-game</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>distr</artifactId>
+    <packaging>karaf-assembly</packaging>
+    <name>The game karaf distributive</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.karaf.features</groupId>
+            <artifactId>framework</artifactId>
+            <version>${karaf.version}</version>
+            <type>kar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.karaf.features</groupId>
+            <artifactId>standard</artifactId>
+            <version>${karaf.version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
+
+        <dependency>
+            <groupId>the-game</groupId>
+            <artifactId>karaf-branding</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/filtered-resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.karaf.tooling</groupId>
+                <artifactId>karaf-maven-plugin</artifactId>
+                <version>${karaf.version}</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>assembly</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                    <execution>
+                        <id>default-assembly</id>
+                        <phase>dont-execute</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--<karafVersion>${karaf.version}</karafVersion>-->
+                    <!-- bootFeatures starts up these features when Karaf first boots up.
+                         The feature names are obtained from the features.xml in the
+                         dependencies section
+                     -->
+                    <bootFeatures>
+                        <feature>standard</feature>
+                        <feature>config</feature>
+                        <feature>package</feature>
+                        <feature>kar</feature>
+                        <feature>ssh</feature>
+                        <feature>management</feature>
+                    </bootFeatures>
+                    <!-- installedFeatures only installs the libraries in the ${KARAF_HOME}/system directory
+                         but the user will have to start it up manually via Karaf command line feature:install
+                    -->
+                    <installedFeatures>
+                        <feature>scheduler</feature>
+                        <!--<feature>war</feature>-->
+                        <!--<feature>webconsole</feature>-->
+                    </installedFeatures>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>filter</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-antrun-plugin</artifactId>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>rename_script</id>-->
+                        <!--<phase>process-resources</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>run</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<target>-->
+                                <!--<move file="target/assembly/bin/karaf"-->
+                                      <!--tofile="target/assembly/bin/thegame"/>-->
+                                <!--<move file="target/assembly/bin/karaf.bat"-->
+                                      <!--tofile="target/assembly/bin/thegame.bat"/>-->
+                                <!--<replace dir="target/assembly/bin"-->
+                                         <!--token="bin/karaf "-->
+                                         <!--value="bin/thegame "/>-->
+                                <!--<replace dir="target/assembly/bin"-->
+                                         <!--token="karaf.out"-->
+                                         <!--value="thegame.out"/>-->
+                                <!--<replace dir="target/assembly/bin"-->
+                                         <!--token="karaf.bat"-->
+                                         <!--value="thegame.bat"/>-->
+                                <!--<replace dir="target/assembly/bin"-->
+                                         <!--token='KARAF_SCRIPT="karaf'-->
+                                         <!--value='KARAF_SCRIPT="thegame'/>-->
+                            <!--</target>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <!--<inherited>false</inherited>-->
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>karaf-branding</artifactId>
+                                    <version>${project.version}</version>
+                                    <!-- target/assembly is the directory karaf-maven-plugin
+                                         assembles all the files of the Karaf server -->
+                                    <outputDirectory>target/assembly/lib</outputDirectory>
+                                    <destFileName>karaf-branding.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

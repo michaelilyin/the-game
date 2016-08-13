@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>aggregator</artifactId>
+        <groupId>the-game</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>assembly</artifactId>
+    <packaging>pom</packaging>
+    <name>The game osgi assembly</name>
+
+    <properties>
+        <karaf.version>4.0.5</karaf.version>
+        <bundle.plugin.version>3.2.0</bundle.plugin.version>
+    </properties>
+
+    <modules>
+        <module>distr</module>
+        <module>branding</module>
+    </modules>
+
+</project>
